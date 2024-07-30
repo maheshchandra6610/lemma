@@ -14,11 +14,11 @@ class Pipeline:
 
     def pool_create(self):
         self.worker_pool = []
-        for i in range(int(self.settings.args.workers)):
-            worker = LambdaWorker(self.command_queue, self.stdout_queue)
-            self.worker_pool.append(worker)
-            thread = Thread(target=LambdaWorker.run, args=(worker,), daemon=True)
-            thread.start()
+        for i in range(int(self.settings.args.workers)): # gets the number of lambda workers allotted and for each lambda worker
+            worker = LambdaWorker(self.command_queue, self.stdout_queue) # creates a worker object with commands for it to exec and separate output for it
+            self.worker_pool.append(worker) # That worker is appended to worker pool queue
+            thread = Thread(target=LambdaWorker.run, args=(worker,), daemon=True) # A thread is created and all the workers are run concurrently
+            thread.start() # thread starts to run
 
     def pool_idle(self):
         return all(worker.idle for worker in self.worker_pool)
@@ -31,7 +31,7 @@ class Pipeline:
 
     def run(self):
         
-        self.pool_create()
+        self.pool_create() # creates a pool first
 
         while True:
             self.input_adapter.process(self.command_queue)

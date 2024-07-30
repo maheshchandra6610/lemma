@@ -45,15 +45,15 @@ def get_args():
     return args, parser
 
 def validate_args(settings):
-    parser = settings.parser
-    args = settings.args
-    if len(sys.argv) == 1:
+    parser = settings.parser  # parser for the args
+    args = settings.args  # arguments in the commands
+    if len(sys.argv) == 1:  # If no args are given, print help
         parser.print_help()
         sys.stdout.write('\n')
         tools(settings)
         sys.exit(1)
 
-    if args.tools:
+    if args.tools:  # Setting tools
         tools(settings)
         sys.exit(0)
 
@@ -163,16 +163,17 @@ class Settings:
         self.config.set('DEFAULT', 'lambda_url', value)
         self._save_config()
 
-    @property
-    def stdin_pipe_exists(self) -> bool:
+    @property # A method to act as a property (class variable)
+    def stdin_pipe_exists(self) -> bool: # Checks if the terminal is connected or not and returns boolean
         return not sys.stdin.isatty()
 
 
 
 @lru_cache(maxsize=1)
+# gets the settings from the Settings class
 def get_settings()->Settings:
     s = Settings()
-    validate_args(s)
+    validate_args(s) # Validate Arguments
     return s
 
 @lru_cache(maxsize=1)
